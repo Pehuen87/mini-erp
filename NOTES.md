@@ -70,6 +70,22 @@ Para hacer algunas preguntas puntuales al principio, por ejemplo que me otorgue 
 También para generar los test en el backend en función de Reglas de Negocio y Flujos que deben Funcionar, le puse en el prompt:
 "Te voy a pasar una reglas de negocio y los flujos que necesito que funcionen, y revisa de este repositorio los test (esta completamente prohibido modificar los que estan) quiero que primero crees una lista de casos de test que cubran cada regla que te paso, con casos borde. Dame para cada caso los datos de entrada y el resultado esperado"
 Creó los casos de test y los borde y con eso le pedí que cree los test. Luego yo evalue el resultado de los test y los errores que se encontraron con eso. 
+Tomé algunas decisiones al respecto, para generar todos los casos de prueba y algunas decisiones de negocio que no estaban explicitas, en función de lo que fue encontrando la ia: 
+
+| | Decisión | Qué fija en los tests / por qué |
+|---|---|---|
+| D1 | Redondeo a 2 decimales con AwayFromZero, el habitual en facturación argentina | 0,50 al 21% da un IVA de 0,11, no 0,10 |
+| D2 | Primero se redondea el subtotal de cada línea, después se calcula el IVA sobre ese valor y al final se suma | 1×33,33 con 10% de descuento da 30,00 / 6,30 / 36,30. 0,99 con 50% da IVA 0,11, no 0,10 |
+| D3 | La validez se cuenta por día calendario UTC, con el último día incluido | Uno creado hace 30 días con validez 30 se puede facturar hoy, a cualquier hora |
+| D4 | validezDias tiene que ser ≥ 1 | 0 y −5 se rechazan al crear |
+| D5 | Se puede presupuestar más cantidad que el stock disponible; el stock se controla al facturar | Crear con cantidad 50 y stock 10 da OK y el stock no cambia |
+| D6 | Facturar un presupuesto que no existe devuelve 404 | El servicio lanza KeyNotFoundException y el controller la traduce a 404 |
+| D7 | El borrado es lógico (estado Eliminado) y un presupuesto facturado no se puede borrar | La factura tiene que seguir apuntando a un presupuesto válido |
+| D8 | Los números de presupuesto no se reutilizan | Si se crean 1 y 2 y se borra el 2, el siguiente es 3. Hoy se cumple porque el borrado es lógico y el registro sigue contando para Count + 1 |
+| D9 | Se acepta un descuento de 0% a 100%, ambos extremos incluidos | −0,01 y 100,01 se rechazan |
+| D10 | Un presupuesto sin ítems se rechaza | items: [] da 400 |
+| D11 | Un Borrador se puede facturar; un Rechazado, no | Sin esto el flujo 5 no se podía hacer por la API, porque no hay endpoint para aprobar |
+
 
 Creé dos skills que adjunto, uno copia los estilos de una pagina en base a una url, el otro cambia los estilos y formato de visualizacion (sin tocar logica) para asemejarse a un ERP, esto me dió velocidad para poder hacerlo "feo" y luego pasar estos dos skills y entregar algo mas presentable. 
 
