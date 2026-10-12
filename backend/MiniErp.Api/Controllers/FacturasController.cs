@@ -39,6 +39,10 @@ public class FacturasController : ControllerBase
             var f = await _facturacion.FacturarAsync(presupuestoId);
             return Ok(new FacturaDto(f.Id, f.Numero, f.Fecha, f.PresupuestoId, f.Subtotal, f.Iva, f.Total));
         }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
         catch (InvalidOperationException ex)
         {
             return BadRequest(new { error = ex.Message });
