@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import type { Presupuesto } from "../../../api/types"
-import { getPresupuestos } from "../../../api/clients";
+import { facturaPresupuesto, getPresupuestos } from "../../../api/clients";
 import { AltaPresupuesto } from "../alta/AltaPresupuesto";
 
 
@@ -35,19 +35,29 @@ export function PresupuestosPage() {
         };
     }, [recarga]);
 
+    const facturar = async (p: Presupuesto) => {
+        try {
+            const factura = await facturaPresupuesto(p.id);
+            setMensaje(`Presupuesto ${p.numero} facturado. Factura N.º ${factura.numero} por ${factura.total}.`);
+            setRecarga(r => r + 1);
+        } catch (err) {
+            setMensaje(`No se pudo facturar el presupuesto ${p.numero}: ${err}`);
 
-  if (vista === 'alta') {
-    return (      
-    <AltaPresupuesto
-        onVolver={() => setVista( 'lista' )}
-        onGuardado={(guardado) => {
-          setMensaje(`Presupuesto N° ${guardado.numero} guardado correctamente`);
-          setRecarga(r => r + 1);
-          setVista('lista');
-        }}
-      />
-    );
-  }
+        };
+    }
+
+    if (vista === 'alta') {
+        return (
+            <AltaPresupuesto
+                onVolver={() => setVista('lista')}
+                onGuardado={(guardado) => {
+                    setMensaje(`Presupuesto N° ${guardado.numero} guardado correctamente`);
+                    setRecarga(r => r + 1);
+                    setVista('lista');
+                }}
+            />
+        );
+    }
 
 
 
@@ -66,6 +76,9 @@ export function PresupuestosPage() {
                         <th>
                             Id
                         </th>
+                        <th>
+                            Facturar
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,9 +86,15 @@ export function PresupuestosPage() {
                         presupuestos.map(element =>
                             <tr key={element.id}>
                                 <td>
-                                {element.id}
+                                    {element.id}
+                                </td>
+                                <td>
+                                    <button onClick={() => facturar(element)}>
+                                        Facturar
+                                    </button>
                                 </td>
                             </tr>
+
                         )
                     }
                 </tbody>

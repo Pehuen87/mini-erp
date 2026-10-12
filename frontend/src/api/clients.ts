@@ -1,4 +1,4 @@
-import type { Presupuesto , Articulo, Cliente} from "./types";
+import type { Presupuesto , Articulo, Cliente, Factura} from "./types";
 const API_BASE_URL = 'http://localhost:5080/api';
 
 
@@ -54,6 +54,23 @@ export async function savePresupuesto(presupuesto: Presupuesto): Promise<Presupu
         await errorHandler(response)
     }
     const data: Presupuesto = await response.json();
+    return data;
+}
+
+
+
+export async function facturaPresupuesto(id: number) {
+    const response = await fetch(`${API_BASE_URL}/Facturas/facturar/${id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(id),
+    });
+    if (!response.ok) {
+        await errorHandler(response)
+    }
+    const data: Factura = await response.json();
     return data;
 }
 
