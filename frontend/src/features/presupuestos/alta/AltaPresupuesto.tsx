@@ -116,7 +116,9 @@ export function AltaPresupuesto({onVolver, onGuardado}: Props){
                                         loadingMessage={() => 'Cargando artículos…'}
                                         placeholder="Buscar por código o descripción…"
                                         noOptionsMessage={() => 'No hay artículos que coincidan'}
-                                        value={articulo ? { value: articulo.articuloCodigo, label: articulo.articuloDescripcion } : null}
+                                        value={articulo.articuloId ? { value: articulo.articuloCodigo, label: articulo.articuloDescripcion } : null}
+                                        menuPortalTarget={document.body}
+                                        styles={{ menuPortal: (base) => ({ ...base, zIndex: 20 }) }}
                                         options={articulos.filter(a => !presupuesto.items.find(i => i.articuloId == a.id)).map((a) => ({
                                             value: a.codigo,
                                             label: a.descripcion,
