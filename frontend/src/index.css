@@ -337,6 +337,13 @@ tbody tr:hover {
   background: var(--color-surface-alt);
 }
 
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
 /* ---- Mensajes ---- */
 
 [role='status'] {

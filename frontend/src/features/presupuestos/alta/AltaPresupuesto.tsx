@@ -103,6 +103,7 @@ export function AltaPresupuesto({onVolver, onGuardado}: Props){
                                 </td>
                                 <td>
                                     <Select
+                                        classNamePrefix="rs"
                                         placeholder="Buscar por código o descripción…"
                                         noOptionsMessage={() => 'No hay artículos que coincidan'}
                                         value={articulo ? { value: articulo.articuloCodigo, label: articulo.articuloDescripcion } : null}
