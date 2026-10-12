@@ -36,6 +36,10 @@ export function AltaPresupuesto({onVolver, onGuardado}: Props){
     
     
     const validarYGuardarPresupuesto = async () => {
+        if (!presupuesto.clienteId) {
+            setError('Elegí un cliente antes de guardar.');
+            return;
+        }
         const items = presupuesto.items.filter(item => item.articuloId !== 0);
         try {
             setError(null);
@@ -106,6 +110,9 @@ export function AltaPresupuesto({onVolver, onGuardado}: Props){
                                 <td>
                                     <Select
                                         classNamePrefix="rs"
+                                        isLoading={loading}
+                                        isDisabled={loading}
+                                        loadingMessage={() => 'Cargando artículos…'}
                                         placeholder="Buscar por código o descripción…"
                                         noOptionsMessage={() => 'No hay artículos que coincidan'}
                                         value={articulo ? { value: articulo.articuloCodigo, label: articulo.articuloDescripcion } : null}

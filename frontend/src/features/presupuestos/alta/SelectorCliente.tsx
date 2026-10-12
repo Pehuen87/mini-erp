@@ -14,7 +14,7 @@ function SelectorCliente({value, onChange}: {value: number, onChange: (id:number
         const data = await getClientes();
         setClientes(data);
       } catch (err) {
-        setError(`No se pudieron cargar los clientes: ${error}`);
+        setError(`No se pudieron cargar los clientes: ${err}`);
       } finally {
         setLoading(false);
       }
@@ -30,6 +30,7 @@ function SelectorCliente({value, onChange}: {value: number, onChange: (id:number
           const cliente = clientes.find((c) => c.id === clienteId);
           if (cliente) onChange(cliente.id);
         }}>
+        <option value="" disabled>Elegí un cliente…</option>
         {clientes.map((cliente) => (
           <option key={cliente.id} value={cliente.id}>
             {cliente.razonSocial}

@@ -30,7 +30,9 @@ export function PresupuestosPage() {
                     setPresupuestos(data);
                 }
             } catch (err) {
-            } finally {
+                if (!cancelado) {
+                    setMensaje(`No se pudieron cargar los presupuestos: ${err}`);
+                }
             }
         };
 
