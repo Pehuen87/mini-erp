@@ -17,6 +17,13 @@ public class PresupuestoService
         _numeracion = numeracion;
     }
 
+    static decimal Redondeo(decimal numero)
+    {
+        return Math.Round(numero, 2, MidpointRounding.AwayFromZero);
+    }
+
+
+
     /// <summary>
     /// Calcula subtotal, IVA y total de un presupuesto. El descuento se aplica
     /// por linea antes del IVA.
@@ -27,9 +34,9 @@ public class PresupuestoService
         decimal iva = 0m;
         foreach (var item in presupuesto.Items)
         {
-            var subtotalLinea = item.Cantidad * item.PrecioUnitario * (1 - item.DescuentoPct / 100m);
+            var subtotalLinea = Redondeo(item.Cantidad * item.PrecioUnitario * (1 - item.DescuentoPct / 100m));
             subtotal += subtotalLinea;
-            iva += Math.Round(subtotalLinea * (item.AlicuotaIva / 100m), 2);
+            iva += Redondeo(subtotalLinea * (item.AlicuotaIva / 100m));
         }
 
         var total = subtotal + iva;
