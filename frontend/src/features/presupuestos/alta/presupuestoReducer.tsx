@@ -27,7 +27,7 @@ const calcularSubtotal = (item: PresupuestoItem) => {
 
 const conTotales = (estado: PresupuestoBorrador, items: PresupuestoItem[]): PresupuestoBorrador => {
     const subtotal = redondear2Decimales(items.reduce((acc, item) => acc + item.subtotalLinea, 0));
-    const iva = redondear2Decimales(items.reduce((acc, item) => acc + (item.subtotalLinea * item.alicuotaIva / 100), 0));
+    const iva = redondear2Decimales(items.reduce((acc, item) => acc + redondear2Decimales(item.subtotalLinea * item.alicuotaIva / 100), 0));
     const total = redondear2Decimales(subtotal + iva);
     return { ...estado, items, subtotal, iva, total };
 };
@@ -37,7 +37,7 @@ export type Accion =
     | { tipo: "cambiarCliente"; clienteId: number }
     | { tipo: "agregarItem" }
     | { tipo: "actualizarItem"; index: number; cambios: Partial<PresupuestoItem> }
-    | { tipo: "quitarItem" }
+    | { tipo: "quitarItem"; index: number }
     | { tipo: "validaItems" };
 
 
@@ -54,6 +54,10 @@ export function presupuestoReducer(estado: PresupuestoBorrador, accion: Accion):
                 const actualizado = { ...item, ...accion.cambios };
                 return { ...actualizado, subtotalLinea: calcularSubtotal(actualizado) };
             });
+            return conTotales(estado, items);
+        }
+        case "quitarItem": {
+            const items = estado.items.filter((_, i) => i !== accion.index);
             return conTotales(estado, items);
         }
         case "validaItems": {

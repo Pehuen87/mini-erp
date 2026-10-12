@@ -98,6 +98,7 @@ export function AltaPresupuesto({onVolver, onGuardado}: Props){
                         <th scope="col" className="num">Desc. %</th>
                         <th scope="col" className="num">IVA</th>
                         <th scope="col" className="num">Subtotal</th>
+                        <th scope="col"><span className="sr-only">Acciones</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -164,6 +165,16 @@ export function AltaPresupuesto({onVolver, onGuardado}: Props){
                                 </td>
                                 <td className="num strong">
                                     {moneda.format(articulo.subtotalLinea)}
+                                </td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        className="btn-danger"
+                                        aria-label={`Quitar fila ${index + 1}`}
+                                        onClick={() => dispatch({ tipo: "quitarItem", index })}
+                                    >
+                                        Quitar
+                                    </button>
                                 </td>
                             </tr>
                         )
