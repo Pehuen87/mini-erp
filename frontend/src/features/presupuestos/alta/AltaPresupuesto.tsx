@@ -34,9 +34,14 @@ export function AltaPresupuesto({onVolver, onGuardado}: Props){
     
     
     const validarYGuardarPresupuesto = async () => {
-        dispatch({ tipo: "validaItems" });
-        const guardado = await savePresupuesto(presupuesto);
-        onGuardado(guardado);
+        const items = presupuesto.items.filter(item => item.articuloId !== 0);
+        try {
+            setError(null);
+            const guardado = await savePresupuesto({ ...presupuesto, items });
+            onGuardado(guardado);
+        } catch (err) {
+            setError(`No se pudo guardar el presupuesto: ${err}`);
+        }
     }
 
 
@@ -47,7 +52,7 @@ export function AltaPresupuesto({onVolver, onGuardado}: Props){
                 const data: Articulo[] = await getArticulos();
                 setArticulos(data);
             } catch (err) {
-                setError(`No se pudieron cargar los artículos: err}`);
+                setError(`No se pudieron cargar los artículos: ${err}`);
             } finally {
                 setLoading(false);
             }
@@ -144,6 +149,7 @@ export function AltaPresupuesto({onVolver, onGuardado}: Props){
 
 
             <footer>
+                {error && <p role="alert">{error}</p>}
                 <button type="button" onClick={validarYGuardarPresupuesto} >
                     Guardar Presupuesto
                 </button>

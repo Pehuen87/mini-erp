@@ -7,6 +7,14 @@ import { AltaPresupuesto } from "../alta/AltaPresupuesto";
 export function PresupuestosPage() {
     const [presupuestos, setPresupuestos] = useState<Presupuesto[]>([]);
     const [vista, setVista] = useState<string>('lista');
+    const [recarga, setRecarga] = useState(0);
+    const [mensaje, setMensaje] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!mensaje) return;
+        const timer = setTimeout(() => setMensaje(null), 4000);
+        return () => clearTimeout(timer);
+    }, [mensaje]);
 
     useEffect(() => {
         let cancelado = false;
@@ -25,14 +33,18 @@ export function PresupuestosPage() {
         return () => {
             cancelado = true;
         };
-    }, []);
+    }, [recarga]);
 
 
   if (vista === 'alta') {
     return (      
     <AltaPresupuesto
         onVolver={() => setVista( 'lista' )}
-        onGuardado={() => setVista('lista')}
+        onGuardado={(guardado) => {
+          setMensaje(`Presupuesto N° ${guardado.numero} guardado correctamente`);
+          setRecarga(r => r + 1);
+          setVista('lista');
+        }}
       />
     );
   }
@@ -47,6 +59,7 @@ export function PresupuestosPage() {
                     + Nuevo presupuesto
                 </button>
             </header>
+            {mensaje && <p role="status">{mensaje}</p>}
             <table>
                 <thead>
                     <tr>
