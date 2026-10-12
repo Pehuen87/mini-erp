@@ -38,3 +38,6 @@ app.UseCors();
 app.MapControllers();
 
 app.Run();
+
+// Expone Program para los tests de integracion (WebApplicationFactory).
+public partial class Program { }

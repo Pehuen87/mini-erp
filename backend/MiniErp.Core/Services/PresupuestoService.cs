@@ -87,6 +87,15 @@ public class PresupuestoService
     public async Task EliminarAsync(int id)
     {
         var presupuesto = await _db.Presupuestos.FindAsync(id);
+        if(presupuesto is null)
+        {
+            throw new InvalidOperationException("No existe el presupuesto. No se puede borrar");
+        }
+        if (presupuesto?.Estado == EstadoPresupuesto.Facturado)
+        {
+            throw new InvalidOperationException("No se puede borrar un presupuesto facturado");
+        }
+
         if (presupuesto is not null)
         {
             _db.Presupuestos.Remove(presupuesto);
