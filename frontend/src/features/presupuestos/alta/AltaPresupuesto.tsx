@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useReducer } from "react"
 import type { Articulo } from "../../../api/types"
-import { getArticulos } from "../../../api/clients";
+import { getArticulos, savePresupuesto } from "../../../api/clients";
 import SelectorCliente from "./SelectorCliente";
 import { presupuestoReducer } from "./presupuestoReducer";
 import Select from 'react-select';
@@ -128,6 +128,13 @@ export function AltaPresupuesto() {
             <button onClick={agregarItem} >
                 Agregar artículo
             </button>
+
+
+            <footer>
+                <button type="button" onClick={() => savePresupuesto(presupuesto)}>
+                    Guardar Presupuesto
+                </button>
+            </footer>
         </>
     )
 }
