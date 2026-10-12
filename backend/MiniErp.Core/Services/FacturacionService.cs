@@ -22,11 +22,15 @@ public class FacturacionService
         var presupuesto = await _db.Presupuestos
             .Include(p => p.Items)
             .FirstOrDefaultAsync(p => p.Id == presupuestoId)
-            ?? throw new InvalidOperationException("El presupuesto no existe.");
+            ?? throw new KeyNotFoundException("El presupuesto no existe");
 
-        if(presupuesto.Estado == EstadoPresupuesto.Facturado)
+        if (presupuesto.Estado == EstadoPresupuesto.Facturado)
         {
-            throw new InvalidOperationException("El presupuesto ya está facturado"); 
+            throw new InvalidOperationException("El presupuesto ya está facturado");
+        }
+        if (presupuesto.Estado == EstadoPresupuesto.Rechazado)
+        {
+            throw new InvalidOperationException("El presupuesto se encuentra rechazado");
         }
 
 
