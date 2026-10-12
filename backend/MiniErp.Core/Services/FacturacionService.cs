@@ -32,6 +32,10 @@ public class FacturacionService
         {
             throw new InvalidOperationException("El presupuesto se encuentra rechazado");
         }
+        if (presupuesto.Items.Select(i => i.ArticuloId).Distinct().Count() != presupuesto.Items.Count)
+        {
+            throw new InvalidOperationException("Hay artículos duplicados");
+        }
 
 
         var vencimiento = presupuesto.Fecha.AddDays(presupuesto.ValidezDias);

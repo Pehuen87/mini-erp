@@ -51,10 +51,22 @@ public class PresupuestoService
         {
             throw new InvalidOperationException("El cliente no existe");
         }
+        if (items.Count == 0)
+        {
+            throw new InvalidOperationException("No hay items");
+        }
+        if (validezDias <= 0)
+        {
+            throw new InvalidOperationException("Validez Invalida");
+        }
         foreach (var item in items)
         {
 
             if (item.Cantidad <= 0)
+            {
+                throw new InvalidOperationException("La cantidad de un item no puede ser 0");
+            }
+            if (item.DescuentoPct < 0 || item.DescuentoPct > 100)
             {
                 throw new InvalidOperationException("La cantidad de un item no puede ser 0");
             }
