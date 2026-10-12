@@ -29,7 +29,7 @@ public class PresupuestoService
         {
             var subtotalLinea = item.Cantidad * item.PrecioUnitario * (1 - item.DescuentoPct / 100m);
             subtotal += subtotalLinea;
-            iva += subtotalLinea * (item.AlicuotaIva / 100m);
+            iva += Math.Round(subtotalLinea * (item.AlicuotaIva / 100m), 2);
         }
 
         var total = subtotal + iva;
