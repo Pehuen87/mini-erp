@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import type { Presupuesto } from "../../../api/types"
-import { facturaPresupuesto, getPresupuestos } from "../../../api/clients";
+import { deletePresupuesto, facturaPresupuesto, getPresupuestos } from "../../../api/clients";
 import { AltaPresupuesto } from "../alta/AltaPresupuesto";
 
 
@@ -46,6 +46,17 @@ export function PresupuestosPage() {
         };
     }
 
+    const eliminar = async (p: Presupuesto) => {
+        if (!confirm(`¿Eliminar el presupuesto ${p.numero}?`)) return;
+        try {
+            await deletePresupuesto(p.id);
+            setMensaje(`Presupuesto ${p.numero} eliminado.`);
+            setRecarga(r => r + 1);
+        } catch (err) {
+            setMensaje(`No se pudo eliminar el presupuesto ${p.numero}: ${err}`);
+        }
+    }
+
     if (vista === 'alta') {
         return (
             <AltaPresupuesto
@@ -87,6 +98,9 @@ export function PresupuestosPage() {
                         <th>
                             Facturar
                         </th>
+                        <th>
+                            Eliminar
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -107,6 +121,11 @@ export function PresupuestosPage() {
                                 <td>
                                     <button onClick={() => facturar(element)}>
                                         Facturar
+                                    </button>
+                                </td>
+                                <td>
+                                    <button onClick={() => eliminar(element)}>
+                                        Eliminar
                                     </button>
                                 </td>
                             </tr>

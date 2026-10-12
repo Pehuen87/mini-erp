@@ -75,4 +75,14 @@ export async function facturaPresupuesto(id: number) {
 }
 
 
+export async function deletePresupuesto(id: number): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/presupuestos/${id}`, {
+        method: 'DELETE',
+    });
+    if (!response.ok) {
+        await errorHandler(response)
+    }
+}
+
+
 
