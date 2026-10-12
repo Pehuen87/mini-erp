@@ -40,19 +40,28 @@ public class FacturacionService
 
         var vencimiento = presupuesto.Fecha.AddDays(presupuesto.ValidezDias);
         if (DateTime.UtcNow > vencimiento)
+        {
             throw new InvalidOperationException("El presupuesto esta vencido y no se puede facturar.");
+        }
+
 
         foreach (var item in presupuesto.Items)
         {
             var articulo = await _db.Articulos.FirstAsync(a => a.Id == item.ArticuloId);
-            if(articulo.StockActual < item.Cantidad)
+            if (articulo.StockActual < item.Cantidad)
             {
                 throw new InvalidOperationException("El stock no es suficiente para facturar el articulo: " + item.ArticuloId);
             }
+        }
+        foreach (var item in presupuesto.Items)
+        {
+            var articulo = await _db.Articulos.FirstAsync(a => a.Id == item.ArticuloId);
             articulo.StockActual -= item.Cantidad;
         }
 
         var totales = _presupuestos.CalcularTotales(presupuesto);
+
+
 
         var factura = new Factura
         {

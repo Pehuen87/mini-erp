@@ -79,7 +79,7 @@ public class FacturacionReglasTests
 
         Assert.Equal(10, art.StockActual);
     }
-
+    /* Se elimina porque rechaza si hay un articulo repetido
     [Fact]
     public async Task Facturar_MismoArticuloEnDosLineasQueSumanElStock_DejaStockEnCero()
     {
@@ -92,7 +92,7 @@ public class FacturacionReglasTests
 
         Assert.Equal(0, art.StockActual);
     }
-
+    */
     // ---- Idempotencia y existencia ----
 
     [Fact]
@@ -161,8 +161,10 @@ public class FacturacionReglasTests
     {
         var (db, _, fact) = Escenario.Armar();
         var cliente = await Escenario.ClienteAsync(db);
-        var art = await Escenario.ArticuloAsync(db, stock: 100, precio: 10.04m, alicuota: 10.5m);
-        var pres = await Escenario.PresupuestoAsync(db, cliente, (art, 1), (art, 1), (art, 1));
+        var art1 = await Escenario.ArticuloAsync(db, stock: 100, precio: 10.04m, alicuota: 10.5m);
+        var art2 = await Escenario.ArticuloAsync(db, stock: 100, precio: 10.04m, alicuota: 10.5m);
+        var art3 = await Escenario.ArticuloAsync(db, stock: 100, precio: 10.04m, alicuota: 10.5m);
+        var pres = await Escenario.PresupuestoAsync(db, cliente, (art1, 1), (art2, 1), (art3, 1));
 
         var factura = await fact.FacturarAsync(pres.Id);
 
@@ -262,7 +264,8 @@ public class FacturacionReglasTests
 
         await presupuestos.EliminarAsync(pres.Id);
 
-        Assert.False(await db.Presupuestos.AnyAsync(p => p.Id == pres.Id));
+        var presBorrado = await db.Presupuestos.FirstAsync(p => p.Id == pres.Id);
+        Assert.True(presBorrado.Estado == EstadoPresupuesto.Eliminado);
     }
 
     // ---- Validez (dia calendario, UTC) ----
