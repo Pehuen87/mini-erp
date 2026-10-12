@@ -37,6 +37,10 @@ public class FacturacionService
         foreach (var item in presupuesto.Items)
         {
             var articulo = await _db.Articulos.FirstAsync(a => a.Id == item.ArticuloId);
+            if(articulo.StockActual < item.Cantidad)
+            {
+                throw new InvalidOperationException("El stock no es suficiente para facturar el articulo: " + item.ArticuloId);
+            }
             articulo.StockActual -= item.Cantidad;
         }
 
