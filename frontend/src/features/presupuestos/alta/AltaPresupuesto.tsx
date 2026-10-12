@@ -1,30 +1,34 @@
 
 import { useState, useEffect } from "react"
-import type { Presupuesto } from "../../../api/types"
-import { getPresupuestos } from "../../../api/clients";
+import type { Articulo, Presupuesto } from "../../../api/types"
+import { getArticulos } from "../../../api/clients";
+import SelectorCliente from "./SelectorCliente";
+
 
 
 export function AltaPresupuesto() {
-    const [presupuestos, setPresupuestos] = useState<Presupuesto[]>([]);
-    const [vista, setVista] = useState<string>('lista');
+    const [articulos, setArticulos] = useState<Articulo[]>([]);
+
+    const [presupuesto, setPresupuesto] = useState<Presupuesto>();
+
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        let cancelado = false;
-        const fetchPresupuestos = async () => {
+        const fetchArticulos = async () => {
             try {
-                const data = await getPresupuestos();
-                if (!cancelado) {
-                    setPresupuestos(data);
-                }
+                setLoading(true);
+                const data: Articulo[] = await getArticulos();
+                setArticulos(data);
             } catch (err) {
+                setError(`No se pudieron cargar los artículos: err}`);
             } finally {
+                setLoading(false);
             }
         };
 
-        fetchPresupuestos();
-        return () => {
-            cancelado = true;
-        };
+        fetchArticulos();
     }, []);
 
 
@@ -32,24 +36,33 @@ export function AltaPresupuesto() {
     return (
         <>
             <header className="page-header">
-                <h1>Presupuestos</h1>
-                <button type="button" onClick={() => setVista('alta')}>
-                    + Nuevo presupuesto
+                <h1>Nuevo Presupuesto</h1>
+                <button type="button" onClick={() => console.log('lala')}>
+                    Volver
                 </button>
             </header>
+
+
+          <div>
+            <SelectorCliente value={presupuesto?.clienteId ?? 0} onChange={(id) => console.log(id)} />
+          </div>
+  
+
             <table>
                 <thead>
                     <tr>
                         <th>
-                            Id
+                            Descripcion
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     {
-                        presupuestos.map(element =>
-                            <tr>
-                                {element.id}
+                        articulos.map(element =>
+                            <tr key={element.id}>
+                                <td>
+                                    {element.descripcion}
+                                </td>
                             </tr>
                         )
                     }

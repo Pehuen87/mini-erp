@@ -55,8 +55,10 @@ export function PresupuestosPage() {
                 <tbody>
                     {
                         presupuestos.map(element =>
-                            <tr>
+                            <tr key={element.id}>
+                                <td>
                                 {element.id}
+                                </td>
                             </tr>
                         )
                     }
