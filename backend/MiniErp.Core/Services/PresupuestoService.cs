@@ -68,7 +68,7 @@ public class PresupuestoService
             }
             if (item.DescuentoPct < 0 || item.DescuentoPct > 100)
             {
-                throw new InvalidOperationException("La cantidad de un item no puede ser 0");
+                throw new InvalidOperationException("El descuento de un item debe estar entre 0 y 100");
             }
             var articulo = await _db.Articulos.FirstOrDefaultAsync(a => a.Id == item.ArticuloId)
                 ?? throw new InvalidOperationException($"El articulo {item.ArticuloId} no existe.");

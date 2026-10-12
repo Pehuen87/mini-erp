@@ -41,7 +41,7 @@ public class FacturasController : ControllerBase
         }
         catch (KeyNotFoundException ex)
         {
-            return NotFound(ex.Message);
+            return NotFound(new { error = ex.Message });
         }
         catch (InvalidOperationException ex)
         {
