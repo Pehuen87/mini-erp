@@ -31,7 +31,9 @@ export function AltaPresupuesto() {
         fetchArticulos();
     }, []);
 
-
+    const agregarItem = () => {
+        
+    }
 
     return (
         <>
@@ -43,31 +45,60 @@ export function AltaPresupuesto() {
             </header>
 
 
-          <div>
-            <SelectorCliente value={presupuesto?.clienteId ?? 0} onChange={(id) => console.log(id)} />
-          </div>
-  
+            <div>
+                <SelectorCliente value={presupuesto?.clienteId ?? 0} onChange={(id) => console.log(id)} />
+            </div>
+
+
+
 
             <table>
                 <thead>
                     <tr>
-                        <th>
-                            Descripcion
-                        </th>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                        <th>Cant</th>
+                        <th>Unitario</th>
+                        <th>Desc %</th>
+                        <th>IVA</th>
+                        <th>Subtotal linea</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
-                        articulos.map(element =>
-                            <tr key={element.id}>
+                        presupuesto?.items.map(element =>
+                            <tr key={element.articuloId}>
                                 <td>
-                                    {element.descripcion}
+                                    {element.articuloCodigo}
+                                </td>
+                                <td>
+                                    {element.articuloDescripcion}
+                                </td>
+                                <td>
+                                    {element.cantidad}
+                                </td>
+                                <td>
+                                    {element.precioUnitario}
+                                </td>
+                                <td>
+                                    {element.alicuotaIva}
+                                </td>
+                                <td>
+                                    {element.descuentoPct}
+                                </td>
+                                <td>
+                                    {element.subtotalLinea}
                                 </td>
                             </tr>
                         )
                     }
                 </tbody>
             </table>
+
+
+             <button onClick={agregarItem} >
+                          Agregar artículo
+            </button>
         </>
     )
 }
