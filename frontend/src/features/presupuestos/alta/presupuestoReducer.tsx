@@ -17,7 +17,7 @@ const itemVacio: PresupuestoItem = {
 
 
 export const redondear2Decimales = (numero: number) =>
-  Math.round((numero + Number.EPSILON) * 100) / 100;
+    Math.round((numero + Number.EPSILON) * 100) / 100;
 
 
 const calcularSubtotal = (item: PresupuestoItem) => {
@@ -37,7 +37,8 @@ export type Accion =
     | { tipo: "cambiarCliente"; clienteId: number }
     | { tipo: "agregarItem" }
     | { tipo: "actualizarItem"; index: number; cambios: Partial<PresupuestoItem> }
-    | { tipo: "quitarItem" };
+    | { tipo: "quitarItem" }
+    | { tipo: "validaItems" };
 
 
 
@@ -54,6 +55,10 @@ export function presupuestoReducer(estado: PresupuestoBorrador, accion: Accion):
                 return { ...actualizado, subtotalLinea: calcularSubtotal(actualizado) };
             });
             return conTotales(estado, items);
+        }
+        case "validaItems": {
+            const items = estado.items.filter(item => item.articuloId !== 0);
+            return { ...estado, items };
         }
         default:
             return estado;

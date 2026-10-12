@@ -29,8 +29,11 @@ export function PresupuestosPage() {
 
 
   if (vista === 'alta') {
-    return (
-      <AltaPresupuesto/>
+    return (      
+    <AltaPresupuesto
+        onVolver={() => setVista( 'lista' )}
+        onGuardado={() => setVista('lista')}
+      />
     );
   }
 

@@ -1,16 +1,20 @@
 
 import { useState, useEffect, useReducer } from "react"
-import type { Articulo } from "../../../api/types"
+import type { Articulo, Presupuesto } from "../../../api/types"
 import { getArticulos, savePresupuesto } from "../../../api/clients";
 import SelectorCliente from "./SelectorCliente";
 import { presupuestoReducer } from "./presupuestoReducer";
 import Select from 'react-select';
 
+interface Props {
+  onVolver: () => void;
+  onGuardado: (presupuesto: Presupuesto) => void;
+}
 
 
-export function AltaPresupuesto() {
+export function AltaPresupuesto({onVolver, onGuardado}: Props){
     const [articulos, setArticulos] = useState<Articulo[]>([]);
-
+    
     const [presupuesto, dispatch] = useReducer(presupuestoReducer, {
         id: 0,
         clienteId: 0,
@@ -24,9 +28,17 @@ export function AltaPresupuesto() {
         clienteRazonSocial: '',
         estado: 'pendiente'
     });
-
+    
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    
+    
+    const validarYGuardarPresupuesto = async () => {
+        dispatch({ tipo: "validaItems" });
+        const guardado = await savePresupuesto(presupuesto);
+        onGuardado(guardado);
+    }
+
 
     useEffect(() => {
         const fetchArticulos = async () => {
@@ -52,7 +64,7 @@ export function AltaPresupuesto() {
         <>
             <header className="page-header">
                 <h1>Nuevo Presupuesto</h1>
-                <button type="button" onClick={() => console.log('lala')}>
+                <button type="button" onClick={onVolver}>
                     Volver
                 </button>
             </header>
@@ -124,14 +136,15 @@ export function AltaPresupuesto() {
                 </tbody>
             </table>
 
-
+                    <div>
             <button onClick={agregarItem} >
                 Agregar artículo
             </button>
+                    </div>
 
 
             <footer>
-                <button type="button" onClick={() => savePresupuesto(presupuesto)}>
+                <button type="button" onClick={validarYGuardarPresupuesto} >
                     Guardar Presupuesto
                 </button>
             </footer>
