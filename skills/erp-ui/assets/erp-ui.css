@@ -1,0 +1,118 @@
+/* Estilos base de UI de ERP. REFERENCIA: copiar las reglas necesarias al CSS existente del proyecto y ajustar las variables a sus tokens. */
+:root {
+  --erp-bg: #ffffff;
+  --erp-surface: #f8fafc;
+  --erp-border: #e2e8f0;
+  --erp-text: #0f172a;
+  --erp-text-muted: #64748b;
+  --erp-hover: #f1f5f9;
+  --erp-primary: #2563eb;
+  --erp-radius: 6px;
+
+  --erp-neutral-bg: #f1f5f9;  --erp-neutral-fg: #334155;
+  --erp-info-bg: #dbeafe;     --erp-info-fg: #1e40af;
+  --erp-success-bg: #dcfce7;  --erp-success-fg: #166534;
+  --erp-warning-bg: #fef3c7;  --erp-warning-fg: #92400e;
+  --erp-danger-bg: #fee2e2;   --erp-danger-fg: #991b1b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --erp-bg: #0f172a; --erp-surface: #1e293b; --erp-border: #334155;
+    --erp-text: #e2e8f0; --erp-text-muted: #94a3b8; --erp-hover: #1e293b; --erp-primary: #60a5fa;
+    --erp-neutral-bg: #334155;  --erp-neutral-fg: #e2e8f0;
+    --erp-info-bg: #1e3a8a;     --erp-info-fg: #dbeafe;
+    --erp-success-bg: #14532d;  --erp-success-fg: #dcfce7;
+    --erp-warning-bg: #78350f;  --erp-warning-fg: #fef3c7;
+    --erp-danger-bg: #7f1d1d;   --erp-danger-fg: #fee2e2;
+  }
+}
+
+/* ---- Tabla ---- */
+.erp-table-wrap { overflow-x: auto; border: 1px solid var(--erp-border); border-radius: var(--erp-radius); background: var(--erp-bg); }
+.erp-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; color: var(--erp-text); }
+.erp-table th, .erp-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--erp-border); white-space: nowrap; }
+.erp-table thead th {
+  position: sticky; top: 0; z-index: 1; background: var(--erp-surface);
+  font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--erp-text-muted);
+}
+.erp-table tbody tr:last-child td { border-bottom: none; }
+.erp-table tfoot td { background: var(--erp-surface); font-weight: 600; border-top: 2px solid var(--erp-border); border-bottom: none; }
+.erp-cell--right { text-align: right; }
+.erp-cell--center { text-align: center; }
+.erp-cell--left { text-align: left; }
+.erp-cell--grow { width: 100%; max-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.erp-num { font-variant-numeric: tabular-nums; }
+.erp-mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 0.8125rem; }
+.erp-secondary { display: block; color: var(--erp-text-muted); font-size: 0.75rem; }
+.erp-negative { color: var(--erp-danger-fg); }
+
+.erp-row--clickable { cursor: pointer; }
+.erp-row--clickable:hover, .erp-row--clickable:focus-visible { background: var(--erp-hover); }
+.erp-row--clickable:focus-visible { outline: 2px solid var(--erp-primary); outline-offset: -2px; }
+.erp-row--muted td { color: var(--erp-text-muted); }
+.erp-row--muted .erp-num { text-decoration: line-through; }
+
+.erp-table__message { text-align: center; padding: 2.5rem 1rem; color: var(--erp-text-muted); white-space: normal; }
+.erp-table__message--error { color: var(--erp-danger-fg); }
+
+.erp-sort { all: unset; cursor: pointer; display: inline-flex; gap: 0.3rem; align-items: center; }
+.erp-sort:focus-visible { outline: 2px solid var(--erp-primary); outline-offset: 2px; border-radius: 2px; }
+.erp-sort__icon { font-size: 0.65rem; opacity: 0.6; }
+.erp-link { all: unset; cursor: pointer; color: var(--erp-primary); text-decoration: underline; }
+
+.erp-skeleton { display: block; height: 0.8rem; border-radius: 4px; background: linear-gradient(90deg, var(--erp-hover), var(--erp-border), var(--erp-hover)); background-size: 200% 100%; animation: erp-shimmer 1.2s infinite; }
+@keyframes erp-shimmer { to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .erp-skeleton { animation: none; } }
+
+/* ---- Badges ---- */
+.erp-badge { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; line-height: 1.4; }
+.erp-badge--neutral { background: var(--erp-neutral-bg); color: var(--erp-neutral-fg); }
+.erp-badge--info { background: var(--erp-info-bg); color: var(--erp-info-fg); }
+.erp-badge--success { background: var(--erp-success-bg); color: var(--erp-success-fg); }
+.erp-badge--warning { background: var(--erp-warning-bg); color: var(--erp-warning-fg); }
+.erp-badge--danger { background: var(--erp-danger-bg); color: var(--erp-danger-fg); }
+.erp-badge--muted { background: transparent; color: var(--erp-text-muted); border: 1px dashed var(--erp-border); }
+
+/* Letra de comprobante: [A] */
+.erp-doc-letter { display: inline-grid; place-items: center; width: 1.6rem; height: 1.6rem; border: 2px solid currentColor; border-radius: 4px; font-weight: 700; }
+
+/* Aviso de vencimiento bajo la fecha */
+.erp-due { display: block; font-size: 0.75rem; }
+.erp-due--porVencer { color: var(--erp-warning-fg); }
+.erp-due--vencido { color: var(--erp-danger-fg); font-weight: 600; }
+
+/* ---- Panel de totales ---- */
+.erp-totals { margin: 1rem 0 0 auto; width: min(100%, 22rem); padding: 0.75rem 1rem; border: 1px solid var(--erp-border); border-radius: var(--erp-radius); background: var(--erp-surface); }
+.erp-totals__row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.2rem 0; }
+.erp-totals__row dt { color: var(--erp-text-muted); }
+.erp-totals__row dd { margin: 0; }
+.erp-totals__total { margin-top: 0.4rem; padding-top: 0.6rem; border-top: 2px solid var(--erp-border); font-size: 1.125rem; font-weight: 700; }
+.erp-totals__total dt { color: var(--erp-text); }
+
+/* ---- KPIs ---- */
+.erp-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
+.erp-kpi { padding: 0.75rem 1rem; border: 1px solid var(--erp-border); border-radius: var(--erp-radius); background: var(--erp-bg); }
+.erp-kpi__label { font-size: 0.75rem; color: var(--erp-text-muted); }
+.erp-kpi__value { font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.erp-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---- Móvil: listado como tarjetas (agregar .erp-table--cards y data-label en cada td) ---- */
+@media (max-width: 640px) {
+  .erp-table--cards thead { display: none; }
+  .erp-table--cards tr { display: grid; grid-template-columns: 1fr auto; gap: 0.15rem 0.75rem; padding: 0.75rem; border-bottom: 1px solid var(--erp-border); }
+  .erp-table--cards td { border: none; padding: 0; white-space: normal; }
+  .erp-table--cards td[data-label]::before { content: attr(data-label) ": "; color: var(--erp-text-muted); font-size: 0.75rem; }
+}
+
+/* ---- Impresión ---- */
+@media print {
+  nav, header, .no-print, .erp-sort__icon, button { display: none !important; }
+  body { background: #fff; color: #000; font-size: 10.5pt; }
+  .erp-table-wrap { border: none; overflow: visible; }
+  .erp-table thead { display: table-header-group; }
+  .erp-table thead th { position: static; background: #fff; color: #000; }
+  .erp-table tr { break-inside: avoid; }
+  .erp-badge { border: 1px solid #000; background: none !important; color: #000 !important; }
+}
