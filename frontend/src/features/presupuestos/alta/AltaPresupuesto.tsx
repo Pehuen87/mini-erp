@@ -79,7 +79,7 @@ export function AltaPresupuesto() {
                 <tbody>
                     {
                         presupuesto?.items.map((articulo, index) =>
-                            <tr key={articulo.articuloId}>
+                            <tr key={index}>
                                 <td>
 
                                     {articulo.articuloCodigo}
@@ -89,7 +89,7 @@ export function AltaPresupuesto() {
                                         placeholder="Buscar por código o descripción…"
                                         noOptionsMessage={() => 'No hay artículos que coincidan'}
                                         value={articulo ? { value: articulo.articuloCodigo, label: articulo.articuloDescripcion } : null}
-                                        options={articulos.map((a) => ({
+                                        options={articulos.filter(a => !presupuesto.items.find(i => i.articuloId == a.id)).map((a) => ({
                                             value: a.codigo,
                                             label: a.descripcion,
                                         }))}
@@ -110,10 +110,10 @@ export function AltaPresupuesto() {
                                     {articulo.precioUnitario}
                                 </td>
                                 <td>
-                                    {articulo.alicuotaIva}
+                                    {articulo.descuentoPct}
                                 </td>
                                 <td>
-                                    {articulo.descuentoPct}
+                                    {articulo.alicuotaIva}
                                 </td>
                                 <td>
                                     {articulo.subtotalLinea}

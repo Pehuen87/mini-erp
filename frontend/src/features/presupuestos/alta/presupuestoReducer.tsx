@@ -16,19 +16,19 @@ const itemVacio: PresupuestoItem = {
 };
 
 
-const RedondearA2Decimales = (numero: number) =>  {
-    return Math.round(numero * 100) / 100;
-}
+export const redondear2Decimales = (numero: number) =>
+  Math.round((numero + Number.EPSILON) * 100) / 100;
+
 
 const calcularSubtotal = (item: PresupuestoItem) => {
-    RedondearA2Decimales(item.precioUnitario * item.cantidad * (1 - item.descuentoPct / 100) * 100);
+    return redondear2Decimales(item.precioUnitario * item.cantidad * (1 - item.descuentoPct / 100));
 }
 
 
 const conTotales = (estado: PresupuestoBorrador, items: PresupuestoItem[]): PresupuestoBorrador => {
-    const subtotal = RedondearA2Decimales(items.reduce((acc, item) => acc + item.subtotalLinea, 0));
-    const iva = RedondearA2Decimales(items.reduce((acc, item) => acc + (item.subtotalLinea * item.alicuotaIva / 100), 0));
-    const total = RedondearA2Decimales(subtotal + iva);
+    const subtotal = redondear2Decimales(items.reduce((acc, item) => acc + item.subtotalLinea, 0));
+    const iva = redondear2Decimales(items.reduce((acc, item) => acc + (item.subtotalLinea * item.alicuotaIva / 100), 0));
+    const total = redondear2Decimales(subtotal + iva);
     return { ...estado, items, subtotal, iva, total };
 };
 
