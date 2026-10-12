@@ -11,7 +11,7 @@ async function errorHandler(response: Response): Promise<never> {
 
 
 export async function getPresupuestos(): Promise<Presupuesto[]>{
-    const response = await fetch(`${API_BASE_URL}/api/presupuestos`);
+    const response = await fetch(`${API_BASE_URL}/presupuestos`);
     if (!response.ok) {
         await errorHandler(response)
     }

@@ -121,13 +121,31 @@ export function AltaPresupuesto({onVolver, onGuardado}: Props){
                                     />
                                 </td>
                                 <td>
-                                    {articulo.cantidad}
+                                    <input
+                                        type="number"
+                                        min={1}
+                                        step={1}
+                                        value={articulo.cantidad}
+                                        onChange={(e) => {
+                                            const cantidad = Math.max(1, Math.floor(Number(e.target.value)) || 1);
+                                            dispatch({ tipo: "actualizarItem", index, cambios: { cantidad } });
+                                        }}
+                                    />
                                 </td>
                                 <td>
                                     {articulo.precioUnitario}
                                 </td>
                                 <td>
-                                    {articulo.descuentoPct}
+                                    <input
+                                        type="number"
+                                        min={0}
+                                        max={100}
+                                        value={articulo.descuentoPct}
+                                        onChange={(e) => {
+                                            const descuentoPct = Math.min(100, Math.max(0, Number(e.target.value) || 0));
+                                            dispatch({ tipo: "actualizarItem", index, cambios: { descuentoPct } });
+                                        }}
+                                    />
                                 </td>
                                 <td>
                                     {articulo.alicuotaIva}
