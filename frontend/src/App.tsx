@@ -1,4 +1,4 @@
-import { PresupuestosPage } from "./features/presupuestos/PresupuestosPage"
+import { PresupuestosPage } from "./features/presupuestos/lista/PresupuestosPage"
 function App() {
 
   return (
