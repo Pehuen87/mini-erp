@@ -38,8 +38,9 @@ public class FacturacionService
         }
 
 
-        var vencimiento = presupuesto.Fecha.AddDays(presupuesto.ValidezDias);
-        if (DateTime.UtcNow > vencimiento)
+        // La validez se cuenta por dia calendario (UTC): el ultimo dia valido es Fecha + ValidezDias, inclusive.
+        var ultimoDiaValido = presupuesto.Fecha.Date.AddDays(presupuesto.ValidezDias);
+        if (DateTime.UtcNow.Date > ultimoDiaValido)
         {
             throw new InvalidOperationException("El presupuesto esta vencido y no se puede facturar.");
         }
