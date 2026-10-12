@@ -1,16 +1,29 @@
 
-import { useState, useEffect } from "react"
-import type { Articulo, Presupuesto } from "../../../api/types"
+import { useState, useEffect, useReducer } from "react"
+import type { Articulo } from "../../../api/types"
 import { getArticulos } from "../../../api/clients";
 import SelectorCliente from "./SelectorCliente";
+import { presupuestoReducer } from "./presupuestoReducer";
+import Select from 'react-select';
 
 
 
 export function AltaPresupuesto() {
     const [articulos, setArticulos] = useState<Articulo[]>([]);
 
-    const [presupuesto, setPresupuesto] = useState<Presupuesto>();
-
+    const [presupuesto, dispatch] = useReducer(presupuestoReducer, {
+        id: 0,
+        clienteId: 0,
+        fecha: new Date().toISOString(),
+        validezDias: 15,
+        items: [],
+        subtotal: 0,
+        iva: 0,
+        total: 0,
+        numero: 0,
+        clienteRazonSocial: '',
+        estado: 'pendiente'
+    });
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -31,9 +44,9 @@ export function AltaPresupuesto() {
         fetchArticulos();
     }, []);
 
-    const agregarItem = () => {
-        
-    }
+
+    const agregarItem = () => dispatch({ tipo: "agregarItem" });
+
 
     return (
         <>
@@ -46,8 +59,7 @@ export function AltaPresupuesto() {
 
 
             <div>
-                <SelectorCliente value={presupuesto?.clienteId ?? 0} onChange={(id) => console.log(id)} />
-            </div>
+                <SelectorCliente value={presupuesto.clienteId ?? 0} onChange={(id) => dispatch({ tipo: "cambiarCliente", clienteId: id })} />            </div>
 
 
 
@@ -66,28 +78,46 @@ export function AltaPresupuesto() {
                 </thead>
                 <tbody>
                     {
-                        presupuesto?.items.map(element =>
-                            <tr key={element.articuloId}>
+                        presupuesto?.items.map(articulo =>
+                            <tr key={articulo.articuloId}>
                                 <td>
-                                    {element.articuloCodigo}
+
+                                    {articulo.articuloCodigo}
                                 </td>
                                 <td>
-                                    {element.articuloDescripcion}
+                                    <Select
+                                        placeholder="Buscar por código o descripción…"
+                                        noOptionsMessage={() => 'No hay artículos que coincidan'}
+                                        value={articulo ? { value: articulo.articuloCodigo, label: articulo.articuloDescripcion } : null}
+                                        options={articulos.map((a) => ({
+                                            value: a.codigo,
+                                            label: a.descripcion,
+                                        }))}
+                                        onChange={(selectedOption) => {
+                                            if (selectedOption) {
+                                                const elegido = articulos.find((a) => a.codigo === selectedOption.value); 
+                                                if(elegido){
+                                                    
+                                                }
+                                            }
+                                        }}
+                                    />
+                                    {articulo.articuloDescripcion}
                                 </td>
                                 <td>
-                                    {element.cantidad}
+                                    {articulo.cantidad}
                                 </td>
                                 <td>
-                                    {element.precioUnitario}
+                                    {articulo.precioUnitario}
                                 </td>
                                 <td>
-                                    {element.alicuotaIva}
+                                    {articulo.alicuotaIva}
                                 </td>
                                 <td>
-                                    {element.descuentoPct}
+                                    {articulo.descuentoPct}
                                 </td>
                                 <td>
-                                    {element.subtotalLinea}
+                                    {articulo.subtotalLinea}
                                 </td>
                             </tr>
                         )
@@ -96,8 +126,8 @@ export function AltaPresupuesto() {
             </table>
 
 
-             <button onClick={agregarItem} >
-                          Agregar artículo
+            <button onClick={agregarItem} >
+                Agregar artículo
             </button>
         </>
     )
