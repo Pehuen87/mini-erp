@@ -78,7 +78,7 @@ export function AltaPresupuesto() {
                 </thead>
                 <tbody>
                     {
-                        presupuesto?.items.map(articulo =>
+                        presupuesto?.items.map((articulo, index) =>
                             <tr key={articulo.articuloId}>
                                 <td>
 
@@ -97,12 +97,11 @@ export function AltaPresupuesto() {
                                             if (selectedOption) {
                                                 const elegido = articulos.find((a) => a.codigo === selectedOption.value); 
                                                 if(elegido){
-                                                    
+                                                    dispatch({ tipo: "actualizarItem", index, cambios: { articuloId: elegido.id, articuloCodigo: elegido.codigo, articuloDescripcion: elegido.descripcion, precioUnitario: elegido.precioUnitario, alicuotaIva: elegido.alicuotaIva } });
                                                 }
                                             }
                                         }}
                                     />
-                                    {articulo.articuloDescripcion}
                                 </td>
                                 <td>
                                     {articulo.cantidad}
