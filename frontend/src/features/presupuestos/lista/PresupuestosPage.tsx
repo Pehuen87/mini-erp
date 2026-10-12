@@ -3,6 +3,11 @@ import type { Presupuesto } from "../../../api/types"
 import { deletePresupuesto, facturaPresupuesto, getPresupuestos } from "../../../api/clients";
 import { AltaPresupuesto } from "../alta/AltaPresupuesto";
 
+const moneda = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' });
+const formatNumero = (numero: number) => `P-${String(numero).padStart(6, '0')}`;
+// Toma la parte yyyy-mm-dd del string para no correr la fecha por zona horaria.
+const formatFecha = (fecha: string) => fecha.slice(0, 10).split('-').reverse().join('/');
+
 
 export function PresupuestosPage() {
     const [presupuestos, setPresupuestos] = useState<Presupuesto[]>([]);
@@ -81,59 +86,58 @@ export function PresupuestosPage() {
                 </button>
             </header>
             {mensaje && <p role="status">{mensaje}</p>}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Número</th>
-                        <th>Fecha</th>
-                        <th>Cliente Id</th>
-                        <th>Cliente</th>
-                        <th>Estado</th>
-                        <th>Validez (días)</th>
-                        <th>Items</th>
-                        <th>Subtotal</th>
-                        <th>IVA</th>
-                        <th>Total</th>
-                        <th>
-                            Facturar
-                        </th>
-                        <th>
-                            Eliminar
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        presupuestos.map(element =>
-                            <tr key={element.id}>
-                                <td>{element.id}</td>
-                                <td>{element.numero}</td>
-                                <td>{element.fecha}</td>
-                                <td>{element.clienteId}</td>
-                                <td>{element.clienteRazonSocial}</td>
-                                <td>{element.estado}</td>
-                                <td>{element.validezDias}</td>
-                                <td>{element.items.length}</td>
-                                <td>{element.subtotal}</td>
-                                <td>{element.iva}</td>
-                                <td>{element.total}</td>
-                                <td>
-                                    <button onClick={() => facturar(element)}>
-                                        Facturar
-                                    </button>
-                                </td>
-                                <td>
-                                    <button onClick={() => eliminar(element)}>
-                                        Eliminar
-                                    </button>
-                                </td>
-                            </tr>
-
-                        )
-                    }
-                </tbody>
-            </table>
+            <div className="table-wrap">
+                <table aria-label="Listado de presupuestos">
+                    <thead>
+                        <tr>
+                            <th scope="col" className="num">Id</th>
+                            <th scope="col">N.º</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col" className="expand">Cliente</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col" className="num">Validez</th>
+                            <th scope="col" className="num">Ítems</th>
+                            <th scope="col" className="num">Subtotal</th>
+                            <th scope="col" className="num">IVA</th>
+                            <th scope="col" className="num">Total</th>
+                            <th scope="col"><span className="sr-only">Acciones</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            presupuestos.map(element =>
+                                <tr key={element.id}>
+                                    <td className="num muted">{element.id}</td>
+                                    <td className="mono">{formatNumero(element.numero)}</td>
+                                    <td>{formatFecha(element.fecha)}</td>
+                                    <td>
+                                        {element.clienteRazonSocial}
+                                        <div className="muted small">ID {element.clienteId}</div>
+                                    </td>
+                                    <td>
+                                        <span className={`badge badge--${element.estado?.toLowerCase() ?? ''}`}>{element.estado}</span>
+                                    </td>
+                                    <td className="num">{element.validezDias} días</td>
+                                    <td className="num">{element.items.length}</td>
+                                    <td className="num">{moneda.format(element.subtotal)}</td>
+                                    <td className="num">{moneda.format(element.iva)}</td>
+                                    <td className="num strong">{moneda.format(element.total)}</td>
+                                    <td>
+                                        <div className="acciones">
+                                            <button onClick={() => facturar(element)}>
+                                                Facturar
+                                            </button>
+                                            <button className="btn-danger" onClick={() => eliminar(element)}>
+                                                Eliminar
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )
+                        }
+                    </tbody>
+                </table>
+            </div>
         </>
     )
 }

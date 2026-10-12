@@ -6,6 +6,8 @@ import SelectorCliente from "./SelectorCliente";
 import { presupuestoReducer } from "./presupuestoReducer";
 import Select from 'react-select';
 
+const moneda = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' });
+
 interface Props {
   onVolver: () => void;
   onGuardado: (presupuesto: Presupuesto) => void;
@@ -69,37 +71,37 @@ export function AltaPresupuesto({onVolver, onGuardado}: Props){
         <>
             <header className="page-header">
                 <h1>Nuevo Presupuesto</h1>
-                <button type="button" onClick={onVolver}>
+                <button type="button" className="btn-secondary" onClick={onVolver}>
                     Volver
                 </button>
             </header>
 
 
-            <div>
-                <SelectorCliente value={presupuesto.clienteId ?? 0} onChange={(id) => dispatch({ tipo: "cambiarCliente", clienteId: id })} />            </div>
+            <div className="field">
+                <label htmlFor="cliente-select">Cliente</label>
+                <SelectorCliente value={presupuesto.clienteId ?? 0} onChange={(id) => dispatch({ tipo: "cambiarCliente", clienteId: id })} />
+            </div>
 
 
-
-
-            <table>
+            <div className="table-wrap">
+            <table aria-label="Ítems del presupuesto">
                 <thead>
                     <tr>
-                        <th>Código</th>
-                        <th>Descripción</th>
-                        <th>Cant</th>
-                        <th>Unitario</th>
-                        <th>Desc %</th>
-                        <th>IVA</th>
-                        <th>Subtotal linea</th>
+                        <th scope="col">Código</th>
+                        <th scope="col" className="expand">Descripción</th>
+                        <th scope="col" className="num">Cant.</th>
+                        <th scope="col" className="num">Unitario</th>
+                        <th scope="col" className="num">Desc. %</th>
+                        <th scope="col" className="num">IVA</th>
+                        <th scope="col" className="num">Subtotal</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
                         presupuesto?.items.map((articulo, index) =>
                             <tr key={index}>
-                                <td>
-
-                                    {articulo.articuloCodigo}
+                                <td className="mono">
+                                    {articulo.articuloCodigo || '—'}
                                 </td>
                                 <td>
                                     <Select
@@ -121,9 +123,10 @@ export function AltaPresupuesto({onVolver, onGuardado}: Props){
                                         }}
                                     />
                                 </td>
-                                <td>
+                                <td className="num">
                                     <input
                                         type="number"
+                                        aria-label={`Cantidad fila ${index + 1}`}
                                         min={1}
                                         step={1}
                                         value={articulo.cantidad}
@@ -133,12 +136,13 @@ export function AltaPresupuesto({onVolver, onGuardado}: Props){
                                         }}
                                     />
                                 </td>
-                                <td>
-                                    {articulo.precioUnitario}
+                                <td className="num">
+                                    {moneda.format(articulo.precioUnitario)}
                                 </td>
-                                <td>
+                                <td className="num">
                                     <input
                                         type="number"
+                                        aria-label={`Descuento % fila ${index + 1}`}
                                         min={0}
                                         max={100}
                                         value={articulo.descuentoPct}
@@ -148,24 +152,39 @@ export function AltaPresupuesto({onVolver, onGuardado}: Props){
                                         }}
                                     />
                                 </td>
-                                <td>
-                                    {articulo.alicuotaIva}
+                                <td className="num">
+                                    {articulo.alicuotaIva} %
                                 </td>
-                                <td>
-                                    {articulo.subtotalLinea}
+                                <td className="num strong">
+                                    {moneda.format(articulo.subtotalLinea)}
                                 </td>
                             </tr>
                         )
                     }
                 </tbody>
             </table>
+            </div>
 
-                    <div>
-            <button onClick={agregarItem} >
-                Agregar artículo
-            </button>
-                    </div>
+            <div>
+                <button className="btn-secondary" onClick={agregarItem} >
+                    Agregar artículo
+                </button>
+            </div>
 
+            <dl className="totales">
+                <div>
+                    <dt>Subtotal</dt>
+                    <dd>{moneda.format(presupuesto.subtotal)}</dd>
+                </div>
+                <div>
+                    <dt>IVA</dt>
+                    <dd>{moneda.format(presupuesto.iva)}</dd>
+                </div>
+                <div className="totales__total">
+                    <dt>Total</dt>
+                    <dd>{moneda.format(presupuesto.total)}</dd>
+                </div>
+            </dl>
 
             <footer>
                 {error && <p role="alert">{error}</p>}
