@@ -73,9 +73,17 @@ export function PresupuestosPage() {
             <table>
                 <thead>
                     <tr>
-                        <th>
-                            Id
-                        </th>
+                        <th>Id</th>
+                        <th>Número</th>
+                        <th>Fecha</th>
+                        <th>Cliente Id</th>
+                        <th>Cliente</th>
+                        <th>Estado</th>
+                        <th>Validez (días)</th>
+                        <th>Items</th>
+                        <th>Subtotal</th>
+                        <th>IVA</th>
+                        <th>Total</th>
                         <th>
                             Facturar
                         </th>
@@ -85,9 +93,17 @@ export function PresupuestosPage() {
                     {
                         presupuestos.map(element =>
                             <tr key={element.id}>
-                                <td>
-                                    {element.id}
-                                </td>
+                                <td>{element.id}</td>
+                                <td>{element.numero}</td>
+                                <td>{element.fecha}</td>
+                                <td>{element.clienteId}</td>
+                                <td>{element.clienteRazonSocial}</td>
+                                <td>{element.estado}</td>
+                                <td>{element.validezDias}</td>
+                                <td>{element.items.length}</td>
+                                <td>{element.subtotal}</td>
+                                <td>{element.iva}</td>
+                                <td>{element.total}</td>
                                 <td>
                                     <button onClick={() => facturar(element)}>
                                         Facturar
