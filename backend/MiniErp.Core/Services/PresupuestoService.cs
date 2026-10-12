@@ -46,8 +46,18 @@ public class PresupuestoService
 
     public async Task<Presupuesto> CrearAsync(int clienteId, int validezDias, List<PresupuestoItem> items)
     {
+        var cliente = await _db.Clientes.FindAsync(clienteId);
+        if (cliente is null)
+        {
+            throw new InvalidOperationException("El cliente no existe");
+        }
         foreach (var item in items)
         {
+
+            if (item.Cantidad <= 0)
+            {
+                throw new InvalidOperationException("La cantidad de un item no puede ser 0");
+            }
             var articulo = await _db.Articulos.FirstOrDefaultAsync(a => a.Id == item.ArticuloId)
                 ?? throw new InvalidOperationException($"El articulo {item.ArticuloId} no existe.");
 
